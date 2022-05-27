@@ -31,6 +31,15 @@ function displayBoard(board) {
   console.log("");
 }
 
+function initalizeBoard() {
+  let board = {};
+
+  for (let count = 1; count <= 9; count += 1) {
+    board[count] = " ";
+  }
+  return board;
+}
+
 function emptySquares(board) {
   return Object.keys(board).filter((key) => board[key] === INITIAL_MARKER);
 }
@@ -60,16 +69,60 @@ function computerChoosesSquare(board) {
   board[square] = COMPUTER_MARKER;
 }
 
-function initalizeBoard() {
-  let board = {};
-
-  for (let count = 1; count <= 9; count += 1) {
-    board[count] = " ";
-  }
-  return board;
+function someoneWon(board) {
+  return !!detectWinner(board);
 }
 
-let board = initalizeBoard();
-displayBoard(board);
+// eslint-disable-next-line max-lines-per-function
+function detectWinner(board) {
+  for (let line = 0; line < WINNING_LINES.length; line += 1) {
+    let [sq1, sq2, sq3] = WINNING_LINES[line];
 
-displayBoard({ b: "b" });
+    if (
+      board[sq1] === HUMAN_MARKER &&
+      board[sq2] === HUMAN_MARKER &&
+      board[sq3] === HUMAN_MARKER
+    ) {
+      return "Player";
+    } else if (
+      board[sq1] === COMPUTER_MARKER &&
+      board[sq2] === COMPUTER_MARKER &&
+      board[sq3] === COMPUTER_MARKER
+    ) {
+      return "Computer";
+    }
+  }
+
+  return null;
+}
+
+while (true) {
+  let board = initalizeBoard();
+
+  while (true) {
+    displayBoard(board);
+
+    playerChoosesSquare(board);
+    if (boardFull(board) || someoneWon(board)) break;
+
+    computerChoosesSquare(board);
+    displayBoard(board);
+
+    if (boardFull(board) || someoneWon(board)) break;
+  }
+
+  displayBoard(board);
+
+  if (someoneWon(board)) {
+    prompt(`${detectWinner(board)} won!`);
+  } else {
+    prompt("It's a tie!");
+  }
+
+  prompt("Would you like to play again? y/n");
+  let answer = readline.question().toLowerCase()[0];
+
+  if (answer !== "y") break;
+}
+
+prompt("Thanks for playing!");
