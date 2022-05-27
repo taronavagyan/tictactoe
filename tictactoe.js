@@ -10,6 +10,10 @@ const WINNING_LINES = [
   [1, 5, 9], [3, 5, 7], // diagonals
 ];
 
+function prompt(msg) {
+  console.log(`=> ${msg}`);
+}
+
 function displayBoard(board) {
   if (typeof board !== "object") board = initalizeBoard();
   console.log("");
@@ -25,6 +29,27 @@ function displayBoard(board) {
   console.log(`  ${board["7"]}  |  ${board["8"]}  |  ${board["9"]}`);
   console.log("     |     |");
   console.log("");
+}
+
+function playerChoosesSquare(board) {
+  let square;
+
+  while (true) {
+    prompt(`Choose a square ${emptySquares(board).join(", ")}:`);
+    square = readline.question().trim();
+
+    if (emptySquares(board).includes(square)) break;
+    prompt("That's not a valid choice.");
+  }
+
+  board[square] = HUMAN_MARKER;
+}
+
+function computerChoosesSquare(board) {
+  let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
+
+  let square = emptySquares(board)[randomIndex];
+  board[square] = COMPUTER_MARKER;
 }
 
 function initalizeBoard() {
