@@ -31,6 +31,14 @@ function displayBoard(board) {
   console.log("");
 }
 
+function emptySquares(board) {
+  return Object.keys(board).filter((key) => board[key] === INITIAL_MARKER);
+}
+
+function boardFull(board) {
+  return emptySquares(board).length === 0;
+}
+
 function playerChoosesSquare(board) {
   let square;
 
