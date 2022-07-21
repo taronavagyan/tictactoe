@@ -1,32 +1,44 @@
+class Square {
+  static UNUSED_SQUARE = " ";
+  static HUMAN_MARKER = "X";
+  static COMPUTER_MARKER = "O";
+  constructor(marker = Square.UNUSED_SQUARE) {
+    this.marker = marker;
+  }
+
+  toString() {
+    return this.marker;
+  }
+}
+
 class Board {
   constructor() {
-    // STUB
-    // Need a way to model the 3x3 grid. Maybe squares?
-    // What data structure? An Array? An Object? Something else?
-    // What should the data structure store? Strings? Numbers? Square objects?
+    this.squares = {};
+    for (let squareNum = 1; squareNum <= 9; squareNum += 1) {
+      this.squares[squareNum] = new Square();
+    }
   }
 
   display() {
     console.log("");
     console.log("     |     |");
-    console.log("     |     |");
-    console.log("     |     |");
-    console.log("-----+-----+-----");
-    console.log("     |     |");
-    console.log("     |     |");
+    console.log(
+      `  ${this.squares["1"]}  |  ${this.squares["2"]}  |  ${this.squares["3"]}`
+    );
     console.log("     |     |");
     console.log("-----+-----+-----");
     console.log("     |     |");
+    console.log(
+      `  ${this.squares["4"]}  |  ${this.squares["5"]}  |  ${this.squares["6"]}`
+    );
     console.log("     |     |");
+    console.log("-----+-----+-----");
+    console.log("     |     |");
+    console.log(
+      `  ${this.squares["7"]}  |  ${this.squares["8"]}  |  ${this.squares["9"]}`
+    );
     console.log("     |     |");
     console.log("");
-  }
-}
-
-class Square {
-  constructor() {
-    // STUB
-    // We need some way to keep track of this square's marker.
   }
 }
 
