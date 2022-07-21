@@ -5,6 +5,22 @@ class Board {
     // What data structure? An Array? An Object? Something else?
     // What should the data structure store? Strings? Numbers? Square objects?
   }
+
+  display() {
+    console.log("");
+    console.log("     |     |");
+    console.log("     |     |");
+    console.log("     |     |");
+    console.log("-----+-----+-----");
+    console.log("     |     |");
+    console.log("     |     |");
+    console.log("     |     |");
+    console.log("-----+-----+-----");
+    console.log("     |     |");
+    console.log("     |     |");
+    console.log("     |     |");
+    console.log("");
+  }
 }
 
 class Square {
@@ -61,7 +77,7 @@ class Computer extends Player {
 
 class TTTGame {
   constructor() {
-    // STUB
+    this.board = new Board();
     // Need a board and two players
   }
 
@@ -86,13 +102,11 @@ class TTTGame {
   }
 
   displayWelcomeMessage() {
-    // STUB
-    // show welcome message
+    console.log("Welcome to Tic Tac Toe!");
   }
 
   displayGoodbyeMessage() {
-    // STUB
-    // show goodbye message
+    console.log("Thanks for playing Tic Tac Toe! Goodbye!");
   }
 
   displayResults() {
@@ -101,8 +115,7 @@ class TTTGame {
   }
 
   displayBoard() {
-    // STUB
-    // display the board in its current state
+    this.board.display();
   }
 
   firstPlayerMoves() {
