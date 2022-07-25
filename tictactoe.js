@@ -20,6 +20,10 @@ class Square {
   isUnused() {
     return this.marker === Square.UNUSED_SQUARE;
   }
+
+  getMarker() {
+    return this.marker;
+  }
 }
 
 class Board {
@@ -60,12 +64,17 @@ class Board {
     let keys = Object.keys(this.squares);
     return keys.filter((key) => this.squares[key].isUnused());
   }
-}
 
-class Row {
-  constructor() {
-    // STUB
-    // We need some way to identify a row of 3 squares
+  isFull() {
+    return this.unusedSquares().length === 0;
+  }
+
+  countMarkersFor(player, keys) {
+    let markers = keys.filter((key) => {
+      return this.squares[key].getMarker() === player.getMarker();
+    });
+
+    return markers.length;
   }
 }
 
@@ -98,10 +107,22 @@ class TTTGame {
     this.computer = new Computer();
   }
 
+  static POSSIBLE_WINNING_ROWS = [
+    ["1", "2", "3"],
+    ["3", "5", "6"],
+    ["7", "8", "9"],
+    ["1", "4", "7"],
+    ["2", "5", "8"],
+    ["3", "6", "9"],
+    ["1", "5", "9"],
+    ["3", "5", "7"],
+  ];
+
   play() {
     // SPIKE
 
     this.displayWelcomeMessage();
+    this.board.display();
 
     while (true) {
       this.board.display();
@@ -126,8 +147,19 @@ class TTTGame {
   }
 
   displayResults() {
-    // STUB
-    // show the results of the game (win, lose, tie)
+    if (this.isWinner(this.human)) {
+      console.log("You won! Congratulations!");
+    } else if (this.isWinner(this.computer)) {
+      console.log("I won! I won! Take that, human!");
+    } else {
+      console.log("A tie game. How boring.");
+    }
+  }
+
+  isWinner(player) {
+    return TTTGame.POSSIBLE_WINNING_ROWS.some((row) => {
+      return this.board.countMarkersFor(player, row) === 3;
+    });
   }
 
   humanMoves() {
@@ -158,8 +190,11 @@ class TTTGame {
   }
 
   gameOver() {
-    // STUB
-    return false;
+    return this.board.isFull() || this.someoneWon();
+  }
+
+  someoneWon() {
+    return this.isWinner(this.human) || this.isWinner(this.computer);
   }
 }
 
