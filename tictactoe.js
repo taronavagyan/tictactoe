@@ -1,13 +1,20 @@
+const readline = require("readline-sync");
+
 class Square {
   static UNUSED_SQUARE = " ";
   static HUMAN_MARKER = "X";
   static COMPUTER_MARKER = "O";
+
   constructor(marker = Square.UNUSED_SQUARE) {
     this.marker = marker;
   }
 
   toString() {
     return this.marker;
+  }
+
+  setMarker(marker) {
+    this.marker = marker;
   }
 }
 
@@ -40,6 +47,10 @@ class Board {
     console.log("     |     |");
     console.log("");
   }
+
+  markSquareAt(key, marker) {
+    this.squares[key].setMarker(marker);
+  }
 }
 
 class Row {
@@ -57,9 +68,12 @@ class Marker {
 }
 
 class Player {
-  constructor() {
-    // STUB
-    // maybe a marker to keep track of this player's symbol ('X' or 'O')
+  constructor(marker) {
+    this.marker = marker;
+  }
+
+  getMarker() {
+    return this.marker;
   }
 
   mark() {
@@ -77,20 +91,21 @@ class Player {
 
 class Human extends Player {
   constructor() {
-    //STUB
+    super(Square.HUMAN_MARKER);
   }
 }
 
 class Computer extends Player {
   constructor() {
-    // STUB
+    super(Square.COMPUTER_MARKER);
   }
 }
 
 class TTTGame {
   constructor() {
     this.board = new Board();
-    // Need a board and two players
+    this.human = new Human();
+    this.computer = new Computer();
   }
 
   play() {
@@ -99,12 +114,12 @@ class TTTGame {
     this.displayWelcomeMessage();
 
     while (true) {
-      this.displayBoard();
+      this.board.display();
 
-      this.firstPlayerMoves();
+      this.humanMoves();
       if (this.gameOver()) break;
 
-      this.secondPlayerMoves();
+      this.computerMoves();
       if (this.gameOver()) break;
       break; // <= execute loop only once for now
     }
@@ -126,18 +141,24 @@ class TTTGame {
     // show the results of the game (win, lose, tie)
   }
 
-  displayBoard() {
-    this.board.display();
+  humanMoves() {
+    let choice;
+
+    while (true) {
+      choice = readline.question("Choose a square between 1 and 9: ");
+
+      let integerValue = parseInt(choice, 10);
+      if (integerValue >= 1 && integerValue <= 9) break;
+
+      console.log("Sorry, that's not a valid choice.");
+      console.log("");
+    }
+
+    this.board.markSquareAt(choice, Square.HUMAN_MARKER);
   }
 
-  firstPlayerMoves() {
-    // STUB
-    // the first player makes a move
-  }
-
-  secondPlayerMoves() {
-    // STUB
-    // the second player makes a move
+  computerMoves() {
+    console.log("computer moves");
   }
 
   gameOver() {
