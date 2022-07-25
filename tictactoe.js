@@ -34,6 +34,7 @@ class Board {
     }
   }
 
+  // eslint-disable-next-line max-lines-per-function
   display() {
     console.log("");
     console.log("     |     |");
@@ -54,6 +55,13 @@ class Board {
     );
     console.log("     |     |");
     console.log("");
+  }
+
+  displayWithClear() {
+    console.clear();
+    console.log("");
+    console.log("");
+    this.display();
   }
 
   markSquareAt(key, marker) {
@@ -122,24 +130,28 @@ class TTTGame {
     // SPIKE
 
     this.displayWelcomeMessage();
+
     this.board.display();
 
     while (true) {
-      this.board.display();
-
       this.humanMoves();
       if (this.gameOver()) break;
 
       this.computerMoves();
       if (this.gameOver()) break;
+
+      this.board.displayWithClear();
     }
 
+    this.board.displayWithClear();
     this.displayResults();
     this.displayGoodbyeMessage();
   }
 
   displayWelcomeMessage() {
+    console.clear();
     console.log("Welcome to Tic Tac Toe!");
+    console.log("");
   }
 
   displayGoodbyeMessage() {
@@ -184,7 +196,8 @@ class TTTGame {
     let choice;
 
     do {
-      choice = Math.floor(9 * Math.random() + 1).toString();
+      //prettier-ignore
+      choice = Math.floor((Math.random() * 9) + 1).toString();
     } while (!validChoices.includes(choice));
     this.board.markSquareAt(choice, this.computer.getMarker());
   }
