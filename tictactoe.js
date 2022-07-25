@@ -60,13 +60,6 @@ class Row {
   }
 }
 
-class Marker {
-  constructor() {
-    // STUB
-    // A marker is something that represents a player's "piece" on the board
-  }
-}
-
 class Player {
   constructor(marker) {
     this.marker = marker;
@@ -117,9 +110,11 @@ class TTTGame {
       this.board.display();
 
       this.humanMoves();
+      this.board.display();
       if (this.gameOver()) break;
 
       this.computerMoves();
+      this.board.display();
       if (this.gameOver()) break;
       break; // <= execute loop only once for now
     }
@@ -154,11 +149,12 @@ class TTTGame {
       console.log("");
     }
 
-    this.board.markSquareAt(choice, Square.HUMAN_MARKER);
+    this.board.markSquareAt(choice, this.human.getMarker());
   }
 
   computerMoves() {
-    console.log("computer moves");
+    let choice = Math.floor(Math.random() * 9 + 1);
+    this.board.markSquareAt(choice, this.computer.getMarker());
   }
 
   gameOver() {
