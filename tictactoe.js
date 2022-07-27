@@ -27,6 +27,7 @@ class Square {
 }
 
 class Board {
+  static CENTER = "5";
   constructor() {
     this.reset();
   }
@@ -75,11 +76,20 @@ class Board {
   }
 
   countMarkersFor(player, keys) {
+    let targetMark = player.getMarker() || Square.UNUSED_SQUARE;
     let markers = keys.filter((key) => {
-      return this.squares[key].getMarker() === player.getMarker();
+      return this.squares[key].getMarker() === targetMark;
     });
 
     return markers.length;
+  }
+
+  hasOneEmpty(keys) {
+    return keys.filter((key) => this.squares[key].isUnused()).length === 1;
+  }
+
+  findFirstEmpty(keys) {
+    return keys.find((key) => this.squares[key].isUnused());
   }
 
   reset() {
@@ -121,7 +131,7 @@ class TTTGame {
 
   static POSSIBLE_WINNING_ROWS = [
     ["1", "2", "3"],
-    ["3", "5", "6"],
+    ["4", "5", "6"],
     ["7", "8", "9"],
     ["1", "4", "7"],
     ["2", "5", "8"],
@@ -192,7 +202,7 @@ class TTTGame {
     const VALID_ANSWERS = ["y", "n"];
     let response;
     while (!VALID_ANSWERS.includes(response)) {
-      response = readline.question("play again? (y/n)").toLowerCase();
+      response = readline.question("play again? (y/n) ").toLowerCase();
     }
     return response === "y";
   }
@@ -201,6 +211,21 @@ class TTTGame {
     return TTTGame.POSSIBLE_WINNING_ROWS.some((row) => {
       return this.board.countMarkersFor(player, row) === 3;
     });
+  }
+
+  forcingMoveExists() {
+    return TTTGame.POSSIBLE_WINNING_ROWS.find((row) => {
+      return (
+        (this.board.countMarkersFor(this.computer, row) === 2 &&
+          this.board.hasOneEmpty(row)) ||
+        (this.board.countMarkersFor(this.human, row) === 2 &&
+          this.board.hasOneEmpty(row))
+      );
+    });
+  }
+
+  forcingMove() {
+    return this.board.findFirstEmpty(this.forcingMoveExists());
   }
 
   humanMoves() {
@@ -227,6 +252,14 @@ class TTTGame {
     let validChoices = this.board.unusedSquares();
     let choice;
 
+    if (this.forcingMoveExists()) {
+      this.board.markSquareAt(this.forcingMove(), this.computer.getMarker());
+    } else if (
+      !this.forcingMoveExists() &&
+      validChoices.includes(Board.CENTER)
+    ) {
+      this.board.markSquareAt(Board.CENTER, this.computer.getMarker());
+    }
     do {
       //prettier-ignore
       choice = Math.floor((Math.random() * 9) + 1).toString();
