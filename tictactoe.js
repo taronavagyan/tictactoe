@@ -28,10 +28,7 @@ class Square {
 
 class Board {
   constructor() {
-    this.squares = {};
-    for (let squareNum = 1; squareNum <= 9; squareNum += 1) {
-      this.squares[squareNum] = new Square();
-    }
+    this.reset();
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -83,6 +80,13 @@ class Board {
     });
 
     return markers.length;
+  }
+
+  reset() {
+    this.squares = {};
+    for (let squareNum = 1; squareNum <= 9; squareNum += 1) {
+      this.squares[squareNum] = new Square();
+    }
   }
 }
 
@@ -142,24 +146,25 @@ class TTTGame {
   };
 
   play() {
-    // SPIKE
-
     this.displayWelcomeMessage();
 
-    this.board.display();
+    do {
+      this.board.reset();
+      this.board.displayWithClear();
+      while (true) {
+        this.humanMoves();
+        if (this.gameOver()) break;
 
-    while (true) {
-      this.humanMoves();
-      if (this.gameOver()) break;
+        this.computerMoves();
+        if (this.gameOver()) break;
 
-      this.computerMoves();
-      if (this.gameOver()) break;
+        this.board.displayWithClear();
+      }
 
       this.board.displayWithClear();
-    }
+      this.displayResults();
+    } while (this.playAgain());
 
-    this.board.displayWithClear();
-    this.displayResults();
     this.displayGoodbyeMessage();
   }
 
@@ -181,6 +186,15 @@ class TTTGame {
     } else {
       console.log("A tie game. How boring.");
     }
+  }
+
+  playAgain() {
+    const VALID_ANSWERS = ["y", "n"];
+    let response;
+    while (!VALID_ANSWERS.includes(response)) {
+      response = readline.question("play again? (y/n)").toLowerCase();
+    }
+    return response === "y";
   }
 
   isWinner(player) {
