@@ -126,6 +126,21 @@ class TTTGame {
     ["3", "5", "7"],
   ];
 
+  static joinOr = function (array, delimiter = ", ", conjunction = "or") {
+    if (array.length <= 1) return array.toString();
+    if (array.length === 2) return `${array[0]} ${conjunction} ${array[1]}`;
+    let result = "";
+
+    for (let idx = 0; idx < array.length; idx += 1) {
+      if (idx + 1 === array.length) {
+        result += conjunction + " " + array[idx];
+      } else {
+        result += array[idx] + delimiter;
+      }
+    }
+    return result;
+  };
+
   play() {
     // SPIKE
 
@@ -179,7 +194,10 @@ class TTTGame {
 
     while (true) {
       let validChoices = this.board.unusedSquares();
-      const prompt = `Choose a square (${validChoices.join(", ")}): `;
+      const prompt = `Choose a square (${TTTGame.joinOr(
+        validChoices,
+        ", "
+      )}): `;
       choice = readline.question(prompt);
 
       if (validChoices.includes(choice)) break;
